@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Invoice } from '@/types';
 
 interface InvoiceEntryFormProps {
-  onSubmit: (formData: Invoice) => void;
+  onSubmit: (formData: Partial<Invoice>) => void; // Use Partial for form submissions
   initialData?: Partial<{
     customerName: string;
     customerEmail: string;

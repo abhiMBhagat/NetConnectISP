@@ -85,35 +85,31 @@ const StaffDashboard: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Fetch invoices
+        const invoicesRes = await fetch('/api/invoices');
+        const invoicesData = await invoicesRes.json();
+        setInvoices(invoicesData);
+        // Fetch users
+        const usersRes = await fetch('/api/users');
+        const usersData = await usersRes.json();
+        setUsers(usersData);
+        // Fetch disputes
+        const disputesRes = await fetch('/api/disputes');
+        const disputesData = await disputesRes.json();
+        setDisputes(disputesData);
+        // ...other stats logic...
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchData();
   }, []);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      // Fetch invoices
-      const invoicesRes = await fetch('/api/invoices');
-      const invoicesData = await invoicesRes.json();
-      setInvoices(invoicesData);
-
-      // Fetch users
-      const usersRes = await fetch('/api/users');
-      const usersData = await usersRes.json();
-      setUsers(usersData);
-
-      // Fetch disputes
-      const disputesRes = await fetch('/api/disputes');
-      const disputesData = await disputesRes.json();
-      setDisputes(disputesData);
-
-      // Calculate stats
-      calculateStats(invoicesData, usersData, disputesData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const calculateStats = (invoices: Invoice[], users: User[], disputes: Dispute[]) => {
     const totalInvoices = invoices.length;
@@ -267,7 +263,7 @@ const StaffDashboard: React.FC = () => {
     }
   };
 
-  const handleUpdateInvoice = async (updatedInvoiceData: any) => {
+  const handleUpdateInvoice = async (updatedInvoiceData: Invoice) => {
     if (!selectedInvoice) return;
     
     try {
@@ -297,7 +293,7 @@ const StaffDashboard: React.FC = () => {
     }
   };
 
-  const handleCreateUser = async (userData: any) => {
+  const handleCreateUser = async (userData: User) => {
     try {
       const response = await fetch('/api/users', {
         method: 'POST',
@@ -477,7 +473,7 @@ const StaffDashboard: React.FC = () => {
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => setActiveTab(tab.id as 'overview' | 'invoices' | 'users' | 'disputes')}
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === tab.id
                       ? 'border-blue-500 text-blue-600'
@@ -581,7 +577,7 @@ const StaffDashboard: React.FC = () => {
                       { value: 'overdue', label: 'Overdue' },
                     ]}
                     value={invoiceFilter}
-                    onChange={(value) => setInvoiceFilter(value as any)}
+                    onChange={(value) => setInvoiceFilter(value as 'all' | 'pending' | 'paid' | 'overdue')}
                     placeholder="Filter by status"
                   />
                   <FilterDropdown
@@ -591,7 +587,7 @@ const StaffDashboard: React.FC = () => {
                       { value: 'thisYear', label: 'This Year' },
                     ]}
                     value={timeFilter}
-                    onChange={(value) => setTimeFilter(value as any)}
+                    onChange={(value) => setTimeFilter(value as 'all' | 'thisMonth' | 'thisYear')}
                     placeholder="Filter by time"
                   />
                 </div>
@@ -676,7 +672,7 @@ const StaffDashboard: React.FC = () => {
                       { value: 'staff', label: 'Staff' },
                     ]}
                     value={userFilter}
-                    onChange={(value) => setUserFilter(value as any)}
+                    onChange={(value) => setUserFilter(value as 'all' | 'customer' | 'staff')}
                     placeholder="Filter by role"
                   />
                 </div>
@@ -946,7 +942,7 @@ export default StaffDashboard;
 const EditInvoiceModal: React.FC<{
   invoice: Invoice;
   onClose: () => void;
-  onSubmit: (invoiceData: any) => void;
+  onSubmit: (invoiceData: Invoice) => void;
 }> = ({ invoice, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     customerName: invoice.customerName || '',
@@ -990,7 +986,7 @@ const EditInvoiceModal: React.FC<{
       dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString() : invoice.dueDate,
     };
 
-    onSubmit(submissionData);
+    onSubmit(submissionData as Partial<Invoice>);
   };
 
   return (
@@ -1168,7 +1164,7 @@ const EditInvoiceModal: React.FC<{
 // Create User Modal Component
 const CreateUserModal: React.FC<{
   onClose: () => void;
-  onSubmit: (userData: any) => void;
+  onSubmit: (userData: User) => void;
 }> = ({ onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     email: '',
@@ -1218,7 +1214,7 @@ const CreateUserModal: React.FC<{
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(formData as Partial<User>);
   };
 
   return (

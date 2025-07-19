@@ -99,7 +99,7 @@ const StaffUsersPage: React.FC = () => {
     setShowModal(true);
   };
 
-  const handleCreateUser = async (userData: any) => {
+  const handleCreateUser = async (userData: User) => {
     try {
       const response = await fetch('/api/users', {
         method: 'POST',
@@ -126,7 +126,7 @@ const StaffUsersPage: React.FC = () => {
     setShowEditUserModal(true);
   };
 
-  const handleUpdateUser = async (userData: any) => {
+  const handleUpdateUser = async (userData: User) => {
     try {
       const response = await fetch(`/api/users/${selectedUser?._id}`, {
         method: 'PUT',
@@ -276,7 +276,7 @@ const StaffUsersPage: React.FC = () => {
               <div className="flex space-x-4">
                 <select
                   value={filter}
-                  onChange={(e) => setFilter(e.target.value as any)}
+                  onChange={(e) => setFilter(e.target.value as 'all' | 'customer' | 'staff')}
                   className="border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">All Roles</option>
@@ -572,7 +572,7 @@ const StaffUsersPage: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {getUserInvoices(selectedUser.email).slice(0, 5).map((invoice: any) => (
+                      {getUserInvoices(selectedUser.email).slice(0, 5).map((invoice: Invoice) => (
                         <tr key={invoice._id}>
                           <td className="px-4 py-2 text-sm text-gray-900">{invoice.invoiceNumber}</td>
                           <td className="px-4 py-2 text-sm text-gray-900">
@@ -654,7 +654,7 @@ const StaffUsersPage: React.FC = () => {
 // Create User Modal Component
 const CreateUserModal: React.FC<{
   onClose: () => void;
-  onSubmit: (userData: any) => void;
+  onSubmit: (userData: User) => void;
 }> = ({ onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     email: '',
@@ -910,7 +910,7 @@ const CreateUserModal: React.FC<{
 const EditUserModal: React.FC<{
   user: User;
   onClose: () => void;
-  onSubmit: (userData: any) => void;
+  onSubmit: (userData: Partial<User>) => void;
 }> = ({ user, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     email: user.email,

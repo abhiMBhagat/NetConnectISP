@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   text: { fontSize: 12, marginBottom: 5 },
 });
 
-export const InvoicePDF = ({ invoice }: { invoice: Invoice }) => (
+export const InvoicePDF = ({ invoice }: { invoice: Partial<Invoice> }) => ( // Use Partial for invoice
   <Document>
     <Page style={styles.page}>
       <Text style={styles.title}>Invoice</Text>

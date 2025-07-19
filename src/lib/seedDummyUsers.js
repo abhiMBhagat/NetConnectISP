@@ -1,8 +1,8 @@
-require('dotenv').config({ path: '.env.local' });
-const { connectToDatabase } = require('./mongodb');
-const User = require('../models/User').default;
-const { dummyUsers } = require('../models/User');
-const bcrypt = require('bcrypt');
+import dotenv from 'dotenv';
+import { connectToDatabase } from './mongodb';
+import User, { dummyUsers } from '../models/User';
+import bcrypt from 'bcrypt';
+dotenv.config({ path: '.env.local' });
 
 async function seed() {
   await connectToDatabase();

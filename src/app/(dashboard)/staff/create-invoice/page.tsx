@@ -13,7 +13,7 @@ const StaffCreateInvoicePage: React.FC = () => {
   // State to show success message after invoice creation
   const [success, setSuccess] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [editData, setEditData] = React.useState<any>(null);
+  const [editData, setEditData] = React.useState<Record<string, unknown> | null>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
   const customerEmail = searchParams.get('customer');
@@ -23,9 +23,21 @@ const StaffCreateInvoicePage: React.FC = () => {
   // Fetch invoice data for editing
   React.useEffect(() => {
     if (isEditing) {
+      const fetchInvoiceData = async () => {
+        if (!editId) return;
+        try {
+          const response = await fetch(`/api/invoices/${editId}`);
+          if (response.ok) {
+            const invoice = await response.json();
+            setEditData(invoice);
+          }
+        } catch (error) {
+          console.error('Error fetching invoice:', error);
+        }
+      };
       fetchInvoiceData();
     }
-  }, [editId]);
+  }, [editId, isEditing]);
 
   const fetchInvoiceData = async () => {
     if (!editId) return;
@@ -53,16 +65,16 @@ const StaffCreateInvoicePage: React.FC = () => {
   const initialData = React.useMemo(() => {
     if (editData) {
       return {
-        customerName: editData.customerName || '',
-        customerEmail: editData.customerEmail || '',
-        invoiceNumber: editData.invoiceNumber || '',
-        invoiceDate: editData.invoiceDate ? new Date(editData.invoiceDate).toISOString().split('T')[0] : '',
-        dueDate: editData.dueDate ? new Date(editData.dueDate).toISOString().split('T')[0] : '',
-        amount: editData.amount || 0,
-        status: editData.status || 'Pending',
-        serviceType: editData.serviceType || '',
-        billingPeriod: editData.billingPeriod || '',
-        description: editData.description || '',
+        customerName: typeof editData.customerName === 'string' ? editData.customerName : '',
+        customerEmail: typeof editData.customerEmail === 'string' ? editData.customerEmail : '',
+        invoiceNumber: typeof editData.invoiceNumber === 'string' ? editData.invoiceNumber : '',
+        invoiceDate: typeof editData.invoiceDate === 'string' ? editData.invoiceDate : '',
+        dueDate: typeof editData.dueDate === 'string' ? editData.dueDate : '',
+        amount: typeof editData.amount === 'string' ? editData.amount : '',
+        status: typeof editData.status === 'string' ? editData.status : 'Pending',
+        serviceType: typeof editData.serviceType === 'string' ? editData.serviceType : '',
+        billingPeriod: typeof editData.billingPeriod === 'string' ? editData.billingPeriod : '',
+        description: typeof editData.description === 'string' ? editData.description : '',
       };
     }
     
@@ -81,7 +93,7 @@ const StaffCreateInvoicePage: React.FC = () => {
     };
   }, [editData, customerEmail]);
 
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: Record<string, unknown>) => {
     setLoading(true);
     try {
       const url = isEditing ? `/api/invoices/${editId}` : "/api/invoices";

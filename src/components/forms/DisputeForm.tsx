@@ -14,18 +14,16 @@ export default function DisputeForm() {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<DisputeFormData>();
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [isCustomer, setIsCustomer] = useState(false);
 
   useEffect(() => {
     const match = document.cookie.match(/session=([^;]+)/);
     if (match) {
       try {
-        const session = JSON.parse(decodeURIComponent(match[1]));
-        if (session.role === 'customer') setIsCustomer(true);
-        else setIsCustomer(false);
-      } catch { setIsCustomer(false); }
+        // const session = JSON.parse(decodeURIComponent(match[1]));
+        // ...existing code...
+      } catch {}
     } else {
-      setIsCustomer(false);
+      // ...existing code...
     }
   }, []);
 
