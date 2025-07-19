@@ -3,10 +3,10 @@ import { connectToDatabase } from '@/lib/mongodb';
 import Dispute from '@/models/Dispute';
 
 // GET a single dispute by ID
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, context: { params: { id: string } }) {
   try {
     await connectToDatabase();
-    const { id } = await params;
+    const id = context.params.id;
     const dispute = await Dispute.findById(id);
     if (!dispute) {
       return NextResponse.json({ error: 'Dispute not found' }, { status: 404 });
@@ -19,11 +19,11 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 }
 
 // UPDATE a dispute by ID
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, context: { params: { id: string } }) {
   try {
     await connectToDatabase();
     const data = await req.json();
-    const { id } = await params;
+    const id = context.params.id;
     const dispute = await Dispute.findByIdAndUpdate(id, data, { new: true });
     if (!dispute) {
       return NextResponse.json({ error: 'Dispute not found' }, { status: 404 });
@@ -36,10 +36,10 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 }
 
 // DELETE a dispute by ID
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
   try {
     await connectToDatabase();
-    const { id } = await params;
+    const id = context.params.id;
     const dispute = await Dispute.findByIdAndDelete(id);
     if (!dispute) {
       return NextResponse.json({ error: 'Dispute not found' }, { status: 404 });
@@ -49,4 +49,3 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     console.error('Error deleting dispute:', error);
     return NextResponse.json({ error: 'Failed to delete dispute' }, { status: 500 });
   }
-}
