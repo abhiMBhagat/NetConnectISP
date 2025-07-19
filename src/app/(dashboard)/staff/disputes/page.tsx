@@ -25,7 +25,7 @@ const StaffDisputesPage: React.FC = () => {
     fetchDisputes();
   }, []);
 
-  const fetchDisputes = async () => {
+  const fetchDisputes = async (): Promise<void> => {
     setLoading(true);
     try {
       const response = await fetch('/api/disputes');

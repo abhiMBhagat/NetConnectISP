@@ -27,7 +27,7 @@ const CustomerDashboard: React.FC = () => {
       a.download = `invoice_${invoice.invoiceNumber || 'unknown'}.pdf`;
       a.click();
       window.URL.revokeObjectURL(url);
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('Client-side PDF error:', error.message);
         alert('Error generating PDF: ' + error.message);
@@ -40,10 +40,10 @@ const CustomerDashboard: React.FC = () => {
 
   // Fetch all invoices from API on mount
   useEffect(() => {
-    async function fetchInvoices() {
+    async function fetchInvoices(): Promise<void> {
       setLoading(true);
       const res = await fetch('/api/invoices');
-      const data = await res.json();
+      const data: Invoice[] = await res.json();
       setAllInvoices(data);
       // Apply filter after fetch
       const currentYear = new Date().getFullYear();
@@ -58,7 +58,7 @@ const CustomerDashboard: React.FC = () => {
   }, [filter]);
 
   // Handle filter dropdown change (Monthly/Yearly)
-  const handleFilterChange = (filter: string) => {
+  const handleFilterChange = (filter: string): void => {
     setFilter(filter);
     const currentYear = new Date().getFullYear();
     let filteredInvoices: Invoice[] = [...allInvoices];

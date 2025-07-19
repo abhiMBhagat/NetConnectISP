@@ -73,7 +73,7 @@ const StaffDashboard: React.FC = () => {
   const [invoiceFilter, setInvoiceFilter] = useState<'all' | 'pending' | 'paid' | 'overdue'>('all');
   const [timeFilter, setTimeFilter] = useState<'all' | 'thisMonth' | 'thisYear'>('all');
   const [userFilter, setUserFilter] = useState<'all' | 'customer' | 'staff'>('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   // Add state for invoice actions
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);

@@ -54,7 +54,7 @@ const StaffUsersPage: React.FC = () => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  const fetchData = async (): Promise<void> => {
     setLoading(true);
     try {
       const [usersRes, invoicesRes] = await Promise.all([

@@ -13,7 +13,7 @@ const StaffCreateInvoicePage: React.FC = () => {
   // State to show success message after invoice creation
   const [success, setSuccess] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [editData, setEditData] = React.useState<Record<string, unknown> | null>(null);
+  const [editData, setEditData] = React.useState<Partial<{ customerName: string; customerEmail: string; invoiceNumber: string; invoiceDate: string; dueDate: string; amount: string; status: string; serviceType: string; billingPeriod: string; description: string; }> | null>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
   const customerEmail = searchParams.get('customer');
@@ -81,7 +81,7 @@ const StaffCreateInvoicePage: React.FC = () => {
     };
   }, [editData, customerEmail]);
 
-  const handleSubmit = async (formData: Record<string, unknown>) => {
+  const handleSubmit = async (formData: Partial<{ customerName: string; customerEmail: string; invoiceNumber: string; invoiceDate: string; dueDate: string; amount: string; status: string; serviceType: string; billingPeriod: string; description: string; }>) => {
     setLoading(true);
     try {
       const url = isEditing ? `/api/invoices/${editId}` : "/api/invoices";
