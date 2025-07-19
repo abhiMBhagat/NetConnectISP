@@ -39,18 +39,6 @@ const StaffCreateInvoicePage: React.FC = () => {
     }
   }, [editId, isEditing]);
 
-  const fetchInvoiceData = async () => {
-    if (!editId) return;
-    try {
-      const response = await fetch(`/api/invoices/${editId}`);
-      if (response.ok) {
-        const invoice = await response.json();
-        setEditData(invoice);
-      }
-    } catch (error) {
-      console.error('Error fetching invoice:', error);
-    }
-  };
 
   // Generate invoice number
   const generateInvoiceNumber = () => {

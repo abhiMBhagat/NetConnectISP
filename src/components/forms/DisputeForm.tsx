@@ -16,15 +16,7 @@ export default function DisputeForm() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const match = document.cookie.match(/session=([^;]+)/);
-    if (match) {
-      try {
-        // const session = JSON.parse(decodeURIComponent(match[1]));
-        // ...existing code...
-      } catch {}
-    } else {
-      // ...existing code...
-    }
+    // ...existing code...
   }, []);
 
   const onSubmit = async (data: DisputeFormData) => {

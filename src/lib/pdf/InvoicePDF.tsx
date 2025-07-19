@@ -16,8 +16,8 @@ export const InvoicePDF = ({ invoice }: { invoice: Partial<Invoice> }) => ( // U
       <Text style={styles.text}>Email: {invoice.customerEmail || 'N/A'}</Text>
       <Text style={styles.text}>Invoice #: {invoice.invoiceNumber || 'N/A'}</Text>
       <Text style={styles.text}>Date: {invoice.invoiceDate || 'N/A'}</Text>
-      <Text style={styles.text}>Amount: ${invoice.amount || 0}</Text>
-      <Text style={styles.text}>Tax: ${invoice.tax || 0}</Text>
+      <Text style={styles.text}>Amount: ${invoice.amount ?? 0}</Text>
+      <Text style={styles.text}>Tax: ${invoice.tax ?? 0}</Text>
       <Text style={styles.text}>Discount: ${invoice.discount || 0}</Text>
       <Text style={styles.text}>Status: ${invoice.status || 'N/A'}</Text>
       {invoice.description && <Text style={styles.text}>Description: {invoice.description}</Text>}

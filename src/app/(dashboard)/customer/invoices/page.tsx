@@ -49,7 +49,7 @@ const CustomerDashboard: React.FC = () => {
       const currentYear = new Date().getFullYear();
       let filtered = data;
       if (filter === 'Monthly') {
-        filtered = data.filter((invoice: Invoice) => new Date(invoice.invoiceDate).getFullYear() === currentYear);
+        filtered = data.filter((invoice: Invoice) => invoice.invoiceDate && new Date(invoice.invoiceDate).getFullYear() === currentYear);
       }
       setInvoices(filtered);
       setLoading(false);
@@ -64,6 +64,7 @@ const CustomerDashboard: React.FC = () => {
     let filteredInvoices: Invoice[] = [...allInvoices];
     if (filter === 'Monthly') {
       filteredInvoices = allInvoices.filter((invoice: Invoice) => {
+        if (!invoice.invoiceDate) return false;
         const year = new Date(invoice.invoiceDate).getFullYear();
         return year === currentYear;
       });
