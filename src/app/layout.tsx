@@ -22,6 +22,7 @@ export default function RootLayout({
             <span className="font-bold text-blue-700 text-lg">NetConnect ISP</span>
           </div>
           <nav className="flex gap-6 items-center">
+            <Link href="/" className="text-gray-700 hover:text-blue-700">Home</Link>
             <Link href="/about" className="text-gray-700 hover:text-blue-700">About</Link>
             <Link href="/services" className="text-gray-700 hover:text-blue-700">Services</Link>
             <Link href="/support" className="text-gray-700 hover:text-blue-700">Support</Link>
