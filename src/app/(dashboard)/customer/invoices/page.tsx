@@ -1,20 +1,22 @@
 // CustomerDashboard: Main dashboard page for listing, filtering, editing, and deleting invoices
 
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import InvoiceFilterDropdown from '@/components/invoice/InvoiceFilterDropdown';
 import { pdf } from '@react-pdf/renderer';
 import { InvoicePDF } from '@/lib/pdf/InvoicePDF';
+import { Invoice } from '@/types';
 
 const CustomerDashboard: React.FC = () => {
   // State for all invoices (unfiltered), filtered invoices, filter type, loading
-  const [allInvoices, setAllInvoices] = useState([]);
-  const [invoices, setInvoices] = useState([]);
+  const [allInvoices, setAllInvoices] = useState<Invoice[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [filter, setFilter] = useState('Monthly');
   const [loading, setLoading] = useState(true);
 
 
-  const generatePDF = async (invoice: any) => {
+  const generatePDF = async (invoice: Invoice) => {
     console.log('Generating PDF for invoice:', invoice);
     try {
       const pdfDoc = pdf(<InvoicePDF invoice={invoice} />);
@@ -25,9 +27,14 @@ const CustomerDashboard: React.FC = () => {
       a.download = `invoice_${invoice.invoiceNumber || 'unknown'}.pdf`;
       a.click();
       window.URL.revokeObjectURL(url);
-    } catch (error: any) {
-      console.error('Client-side PDF error:', error.message);
-      alert('Error generating PDF: ' + error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Client-side PDF error:', error.message);
+        alert('Error generating PDF: ' + error.message);
+      } else {
+        console.error('Client-side PDF error:', error);
+        alert('Error generating PDF.');
+      }
     }
   };
 
@@ -42,21 +49,21 @@ const CustomerDashboard: React.FC = () => {
       const currentYear = new Date().getFullYear();
       let filtered = data;
       if (filter === 'Monthly') {
-        filtered = data.filter((invoice: any) => new Date(invoice.invoiceDate).getFullYear() === currentYear);
+        filtered = data.filter((invoice: Invoice) => new Date(invoice.invoiceDate).getFullYear() === currentYear);
       }
       setInvoices(filtered);
       setLoading(false);
     }
     fetchInvoices();
-  }, []);
+  }, [filter]);
 
   // Handle filter dropdown change (Monthly/Yearly)
   const handleFilterChange = (filter: string) => {
     setFilter(filter);
     const currentYear = new Date().getFullYear();
-    let filteredInvoices = [...allInvoices];
+    let filteredInvoices: Invoice[] = [...allInvoices];
     if (filter === 'Monthly') {
-      filteredInvoices = allInvoices.filter((invoice: any) => {
+      filteredInvoices = allInvoices.filter((invoice: Invoice) => {
         const year = new Date(invoice.invoiceDate).getFullYear();
         return year === currentYear;
       });
@@ -91,7 +98,7 @@ const CustomerDashboard: React.FC = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {invoices.length > 0 ? (
-                  invoices.map((invoice: any) => (
+                  invoices.map((invoice: Invoice) => (
                     <tr key={invoice._id}>
                       <td className="px-6 py-4 whitespace-nowrap text-black">{invoice.customerName}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-black">{invoice.invoiceDate}</td>

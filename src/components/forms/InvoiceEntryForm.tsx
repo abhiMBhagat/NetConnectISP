@@ -2,8 +2,10 @@
 // components/forms/InvoiceEntryForm.tsx
 import React, { useState, useEffect } from 'react';
 
+import { Invoice } from '@/types';
+
 interface InvoiceEntryFormProps {
-  onSubmit: (formData: any) => void;
+  onSubmit: (formData: Invoice) => void;
   initialData?: Partial<{
     customerName: string;
     customerEmail: string;
@@ -64,7 +66,7 @@ const InvoiceEntryForm: React.FC<InvoiceEntryFormProps> = ({ onSubmit, initialDa
     try {
       const response = await fetch('/api/users');
       const users = await response.json();
-      const userExists = users.some((user: any) => user.email === email);
+      const userExists = users.some((user: { email: string }) => user.email === email);
       
       if (userExists) {
         setEmailValidation({ isValidating: false, isValid: true, message: '✓ User found' });
@@ -75,7 +77,7 @@ const InvoiceEntryForm: React.FC<InvoiceEntryFormProps> = ({ onSubmit, initialDa
           message: '✗ User with this email does not exist in the system' 
         });
       }
-    } catch (error) {
+    } catch {
       setEmailValidation({ 
         isValidating: false, 
         isValid: false, 

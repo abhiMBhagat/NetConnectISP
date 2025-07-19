@@ -1,4 +1,6 @@
+
 import { Document, Page, Text, StyleSheet } from '@react-pdf/renderer';
+import { Invoice } from '@/types';
 
 const styles = StyleSheet.create({
   page: { padding: 30 },
@@ -6,7 +8,7 @@ const styles = StyleSheet.create({
   text: { fontSize: 12, marginBottom: 5 },
 });
 
-export const InvoicePDF = ({ invoice }: { invoice: any }) => (
+export const InvoicePDF = ({ invoice }: { invoice: Invoice }) => (
   <Document>
     <Page style={styles.page}>
       <Text style={styles.title}>Invoice</Text>
